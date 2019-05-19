@@ -1,0 +1,25 @@
+{
+  "name": "my-store",
+  "version": "1.0.0",
+  "description": "storefront using Node and MySQL",
+  "main": "bamazonCustomer.js",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^6.3.1",
+    "mysql": "^2.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dallasappraiser/My-Store.git"
+  },
+  "author": "Michael Gentilini",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dallasappraiser/My-Store/issues"
+  },
+  "homepage": "https://github.com/dallasappraiser/My-Store#readme"
+}
