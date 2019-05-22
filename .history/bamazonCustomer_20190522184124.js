@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
   database: "bamazon"
 });
 connection.connect(function (err, res) {
-  if (err) throw err;
+  // if (err) throw err;
   console.log("connected as id " + connection.threadId + "\n");
   mainMenu();
 });
@@ -46,7 +46,7 @@ function mainMenu() {
 
 function showAll() {
   connection.query("SELECT item_id,product_name,price,department_name FROM products ", function (err, res) {
-    if (err) throw err;
+    // if (err) throw err;
     console.log("\n ======================= Availabe Products ========================\n");
     console.table(res);
     // connection.end();

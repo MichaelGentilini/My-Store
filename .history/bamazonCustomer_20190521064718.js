@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
   database: "bamazon"
 });
 connection.connect(function (err, res) {
-  if (err) throw err;
+  // if (err) throw err;
   console.log("connected as id " + connection.threadId + "\n");
   mainMenu();
 });
@@ -42,11 +42,12 @@ function mainMenu() {
           mainMenu();
       }
     });
+
 }
 
 function showAll() {
   connection.query("SELECT item_id,product_name,price,department_name FROM products ", function (err, res) {
-    if (err) throw err;
+    // if (err) throw err;
     console.log("\n ======================= Availabe Products ========================\n");
     console.table(res);
     // connection.end();
@@ -82,38 +83,64 @@ function purchaseByID(printResults) {
         var prod = res[0].product_name;
         var quan = answer.quantity;
 
+
         if (res[0].stock_quantity < answer.quantity) {
           console.log("\nSorry, we don't have enough to fill that order! \n\t Please enter a different amount.");
           mainMenu();
         } else {
           updateInventory(answer.itemId, newQuantity, printResults);
+
         }
+
 
         function printResults(prod, quan, total) {
           console.log("\n\t\Item:\t\t" + prod + "\n\tQuantity: \t" + quan + "\n\tTotal: \t\t$" +
             total.toFixed(2) + "\n");
         }
 
-        function updateInventory(id, newQuantity) {
-          connection.query(
-            "UPDATE products SET ? WHERE ?",
-            [{
-                stock_quantity: newQuantity
-              },
-              {
-                item_id: id
-              }
-            ],
-            function (err, res) {
-              if (err) throw err;
-              console.log("\n ========== Updated Inventory ==========\n");
-              printResults(prod, quan, total);
-              mainMenu();
-            });
-        }
       });
+
+
+
+
+
+      function updateInventory(id, newQuantity) {
+        connection.query(
+          "UPDATE products SET ? WHERE ?",
+          [{
+              stock_quantity: newQuantity
+            },
+            {
+              item_id: id
+            }
+          ],
+          function (err, res) {
+            if (err) throw err;
+            console.log("\n ========== Updated Inventory ==========\n");
+            printResults(prod, quan, total);
+            mainMenu();
+          });
+
+      }
+
 
 
     });
 
+
+
+
 }
+
+
+
+
+
+
+
+
+
+// function checkQuantity() {
+//   if (userQuantity <= productQuantity) {
+
+//   }

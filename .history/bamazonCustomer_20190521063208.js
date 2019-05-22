@@ -42,6 +42,7 @@ function mainMenu() {
           mainMenu();
       }
     });
+
 }
 
 function showAll() {
@@ -78,42 +79,59 @@ function purchaseByID(printResults) {
       }, function (err, res) {
         if (err) throw err;
         var newQuantity = res[0].stock_quantity - answer.quantity;
-        var total = answer.quantity * res[0].price;
-        var prod = res[0].product_name;
-        var quan = answer.quantity;
+        var total = answer.quantity * res[0].price
 
         if (res[0].stock_quantity < answer.quantity) {
           console.log("\nSorry, we don't have enough to fill that order! \n\t Please enter a different amount.");
           mainMenu();
         } else {
-          updateInventory(answer.itemId, newQuantity, printResults);
-        }
-
-        function printResults(prod, quan, total) {
-          console.log("\n\t\Item:\t\t" + prod + "\n\tQuantity: \t" + quan + "\n\tTotal: \t\t$" +
-            total.toFixed(2) + "\n");
-        }
-
-        function updateInventory(id, newQuantity) {
-          connection.query(
-            "UPDATE products SET ? WHERE ?",
-            [{
-                stock_quantity: newQuantity
-              },
-              {
-                item_id: id
-              }
-            ],
-            function (err, res) {
-              if (err) throw err;
-              console.log("\n ========== Updated Inventory ==========\n");
-              printResults(prod, quan, total);
-              mainMenu();
-            });
+          updateInventory(answer.itemId, newQuantity);
+          printResults(res[0].product_name, answer.quantity, total);
         }
       });
 
 
+      function updateInventory(id, newQuantity) {
+        connection.query(
+          "UPDATE products SET ? WHERE ?",
+          [{
+              stock_quantity: newQuantity
+            },
+            {
+              item_id: id
+            }
+          ],
+          function (err, res) {
+            if (err) throw err;
+            console.log("\n ========== Updated Inventory ==========\n");
+
+            mainMenu();
+          });
+
+      }
+
+
+
     });
 
+
+
+  function printResults(prod, quan, total) {
+    console.log("\n\t\Item:\t\t" + prod + "\n\tQuantity: \t" + quan + "\n\tTotal: \t\t$" +
+      total.toFixed(2) + "\n");
+  }
+
 }
+
+
+
+
+
+
+
+
+
+// function checkQuantity() {
+//   if (userQuantity <= productQuantity) {
+
+//   }
