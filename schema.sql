@@ -30,8 +30,6 @@ VALUES
   (012, "Ring - Video Doorbell", "smart-home", 199.99, 25)
 ;
 
-
-
 SELECT *
 FROM products;
 
