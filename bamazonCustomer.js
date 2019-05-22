@@ -55,7 +55,7 @@ function showAll() {
   });
 }
 
-function purchaseByID() {
+function purchaseByID(printResults) {
   inquirer
     .prompt([{
         name: 'itemId',
@@ -83,38 +83,49 @@ function purchaseByID() {
 
         if (res[0].stock_quantity < answer.quantity) {
           console.log("\nSorry, we don't have enough to fill that order! \n\t Please enter a different amount.");
+          mainMenu();
         } else {
           updateInventory(answer.itemId, newQuantity);
-
-          console.log("\n\tItem:" + res[0].product_name + "\n\tQuantity: " + answer.quantity + "\n\tTotal: $" +
-            total.toFixed(2) + "\n");
+          printResults(res[0].product_name, answer.quantity, total);
         }
-        mainMenu();
       });
 
-    });
 
+      function updateInventory(id, newQuantity) {
+        connection.query(
+          "UPDATE products SET ? WHERE ?",
+          [{
+              stock_quantity: newQuantity
+            },
+            {
+              item_id: id
+            }
+          ],
+          function (err, res) {
+            if (err) throw err;
+            console.log("\n ========== Updated Inventory ==========\n");
 
+            mainMenu();
+          });
 
-}
-
-function updateInventory(id, newQuantity) {
-  connection.query(
-    "UPDATE products SET ? WHERE ?",
-    [{
-        stock_quantity: newQuantity
-      },
-      {
-        item_id: id
       }
-    ],
-    function (err, res) {
-      if (err) throw err;
-      console.log("\n ========== Updated Inventory ==========\n");
-      mainMenu();
+
+
+
     });
 
+
+
+  function printResults(prod, quan, total) {
+    console.log("\n\t\Item:\t\t" + prod + "\n\tQuantity: \t" + quan + "\n\tTotal: \t\t$" +
+      total.toFixed(2) + "\n");
+  }
+
 }
+
+
+
+
 
 
 
