@@ -26,7 +26,7 @@ function mainMenu() {
       type: 'list',
       choices: [
         'See all items',
-        'Purchase an Item by ID',
+        'Purchase an Item by ID'
         'Quit'
       ],
     }, ])
@@ -110,7 +110,7 @@ function purchaseByID(printResults) {
             ],
             function (err, res) {
               if (err) throw err;
-              console.log("\n ====== Inventory Has Been Updated ======");
+              console.log("\n ========== Updated Inventory ==========\n");
               printResults(prod, quan, total);
               mainMenu();
             });

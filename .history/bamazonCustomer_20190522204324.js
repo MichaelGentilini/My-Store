@@ -110,7 +110,7 @@ function purchaseByID(printResults) {
             ],
             function (err, res) {
               if (err) throw err;
-              console.log("\n ====== Inventory Has Been Updated ======");
+              console.log("\n ========== Updated Inventory ==========\n");
               printResults(prod, quan, total);
               mainMenu();
             });
