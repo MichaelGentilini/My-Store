@@ -28,7 +28,8 @@ function managerMenu() {
         'View Products for Sale',
         'View Low Inventory',
         'Add to Inventory',
-        'Add New Product'
+        'Add New Product',
+        'Quit'
       ],
     }, ])
     .then(answer => {
@@ -45,11 +46,13 @@ function managerMenu() {
         case 'Add New Product':
           addProduct()
           break;
+        case 'Quit':
+          connection.end();
+          break;
         default:
           managerMenu();
       }
     });
-
 }
 
 function showAll() {
@@ -85,20 +88,6 @@ function lowInventory() {
 }
 
 function addInventory() {
-  connection.query("SELECT item_id,product_name,price,department_name,stock_quantity FROM products ", function (err, res) {
-    if (err) throw err;
-    if (res[0].stock_quantity <= 5) {
-      console.log('We have less than 5 of the following products');
-      console.table(res);
-      // connection.end();
-    } else {
-      console.log('All items have at least 5 items');
-    }
-    managerMenu();
-  });
-}
-
-function addInventory() {
   inquirer
     .prompt([{
         name: 'itemId',
@@ -110,8 +99,9 @@ function addInventory() {
       {
         name: 'quantity',
         message: 'Enter the quantity to be added to inventory:',
-        validate: function validateQuatity(quantity) {
-          return quantity !== '';
+        validate: function checkInput(number) {
+          var reg = /^\d+$/;
+          return reg.test(number) || "please enter a valid quantity"
         }
       }
     ])
@@ -126,7 +116,61 @@ function addInventory() {
         ],
         function (err, res) {
           if (err) throw err;
-          console.log("\n" + res[0].stock_quantity + " has been updated with " + res[0].itemId + " units\n");
+          console.log("\nThe quantity has been updated to " + answer.quantity + " units\n");
+          managerMenu();
+        });
+
+    });
+}
+
+function addProduct() {
+  inquirer
+    .prompt([{
+        name: 'product',
+        message: 'Enter name of the product to be added: ',
+        validate: function validateItem(name) {
+          return name !== '';
+        }
+      },
+      {
+        name: 'department',
+        message: 'Enter the department of the product:',
+        validate: function validateItem(name) {
+          return name !== '';
+        }
+      },
+      {
+        name: 'price',
+        message: 'Enter the price of the product to be updated:',
+        validate: function checkInput(number) {
+          var reg = /^\d+(\.[0-9][0-9])$/;
+          return reg.test(number) || "please enter a valid price including cents (example 24.99)"
+        }
+      },
+      {
+        name: 'quantity',
+        message: 'Enter the quantity to be added:',
+        validate: function checkInput(number) {
+          var reg = /^\d+$/;
+          return reg.test(number) || "please enter a valid quantity"
+        }
+      }
+    ])
+    .then(function (answer) {
+      var sql = "INSERT INTO products SET ?";
+      connection.query(sql, {
+          product_name: answer.product,
+          department_name: answer.department,
+          price: answer.price,
+          stock_quantity: answer.quantity
+        },
+
+        function (err, res) {
+          if (err) throw err;
+          console.log(res);
+          console.log(answer.quantity);
+          console.log("\n" + answer.product + " has been added with item_id" + insertId + "\n\n");
+
           managerMenu();
         });
 

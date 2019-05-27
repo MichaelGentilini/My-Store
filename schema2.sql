@@ -3,24 +3,19 @@ CREATE database bamazon;
 
 USE bamazon;
 
-CREATE TABLE products
+CREATE TABLE departments
 (
-  item_id INT NOT NULL
+  department_id INT NOT NULL
   AUTO_INCREMENT,
-  product_name VARCHAR
-  (100) NULL,
   department_name VARCHAR
   (100) NULL,
-  price FLOAT
-  (6,2) NULL,
-  stock_quantity INT NULL,
-   product_sales FLOAT
-  (10,2) NULL,
-  PRIMARY KEY
-  (item_id)
+  over_head_costs VARCHAR
+  (100) NULL,
+    PRIMARY KEY
+  (department_id)
 );
 
-  INSERT INTO products
+  INSERT INTO departments
     (product_name,department_name,price,stock_quantity)
   VALUES
     ("60 inch 4k television", "tv", 799.99, 3),
