@@ -55,31 +55,42 @@ function managerMenu() {
     });
 }
 
+// ? This function displays all available inventory
 function showAll() {
   connection.query("SELECT item_id,product_name,price,department_name,stock_quantity FROM products ", function (err, res) {
     if (err) throw err;
-    console.log("\n ======================= Products For Sale ========================\n");
+    for (let k = 0; k < res.length; k++) {
+      if (res[k].stock_quantity === null) {
+        res[k].stock_quantity = 0;
+      }
+    };
+    console.log("\n =============================== Products For Sale ================================\n");
     console.table(res);
-    // connection.end();
     managerMenu();
   });
 }
 
+
+// ? This function displays if any inventory is less than 5.
 function lowInventory() {
   connection.query("SELECT item_id,product_name,price,department_name,stock_quantity FROM products", function (err, res) {
     if (err) throw err;
     var lowInventoryArray = [];
 
     for (let i = 0; i < res.length; i++) {
+
+      if (res[i].stock_quantity === null) {
+        res[i].stock_quantity = 0;
+      }
       if (res[i].stock_quantity < 5) {
         lowInventoryArray.push(res[i]);
       }
     };
     if (lowInventoryArray.length < 1) {
 
-      console.log('\nWe have at least 5 of each item');
+      console.log('\n We have at least 5 of each item ');
     } else {
-      console.log("\n\t\t *We have less than 5 of the following*\n");
+      console.log("\n\t\t * We have less than 5 of the following *\n");
       console.table(lowInventoryArray);
     };
     console.log('\n');
@@ -87,6 +98,7 @@ function lowInventory() {
   });
 }
 
+// ? This function is used to add inventory when the the managers selects a product by item_id
 function addInventory() {
   inquirer
     .prompt([{
@@ -98,7 +110,7 @@ function addInventory() {
       },
       {
         name: 'quantity',
-        message: 'Enter the quantity to be added to inventory:',
+        message: 'Enter the proper quantity for the product:',
         validate: function checkInput(number) {
           var reg = /^\d+$/;
           return reg.test(number) || "please enter a valid quantity"
@@ -119,10 +131,10 @@ function addInventory() {
           console.log("\nThe quantity has been updated to " + answer.quantity + " units\n");
           managerMenu();
         });
-
     });
 }
 
+// ? This function allows the manager to add new products
 function addProduct() {
   inquirer
     .prompt([{
@@ -134,10 +146,15 @@ function addProduct() {
       },
       {
         name: 'department',
-        message: 'Enter the department of the product:',
-        validate: function validateItem(name) {
-          return name !== '';
-        }
+        message: 'Enter the department of the product: \n',
+        type: 'list',
+        choices: [
+          'tv',
+          'laptop',
+          'smart-phone',
+          'smart-home',
+          'houseware'
+        ]
       },
       {
         name: 'price',
@@ -167,12 +184,8 @@ function addProduct() {
 
         function (err, res) {
           if (err) throw err;
-          console.log(res);
-          console.log(answer.quantity);
-          console.log("\n" + answer.product + " has been added with item_id" + insertId + "\n\n");
-
+          console.log("\n" + answer.product + " has been added with item_id " + res.insertId + "\n");
           managerMenu();
         });
-
     });
 }

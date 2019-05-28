@@ -88,34 +88,38 @@ function purchaseByID(printResults) {
       }, function (err, res) {
         if (err) throw err;
 
-        var newQuantity = res[0].stock_quantity - answer.quantity;
-        var total = answer.quantity * res[0].price;
-        var prod = res[0].product_name;
-        var quan = answer.quantity;
-        var sales = parseFloat(res[0].product_sales);
-
         // ? not sure how to stop the program from running if there is no result (no item_id)
         if (res.length < 1) {
           console.log(res.length < 1);
-          console.log('\n 💩 💩 💩\t That item does not exist. Please try your order again! \n');;
+          console.log('\n 💩 💩 💩\t That item does not exist. Please try your order again! \n');
+          mainMenu();
+          console.log('\n');
           quitProgram();
-        }
-
-
-        if (res[0].stock_quantity < answer.quantity) {
-          console.log("\nSorry, we don't have enough to fill your order! \n\t Please enter a different amount.");
-
+          // } else if (res.length >= 1) {
+          //   console.log('hello');
+          //   mainMenu();
+        } else if (res[0].stock_quantity < answer.quantity) {
+          console.log("\nSorry, we don't have enough to fill your order! \n\t Please enter a different amount.\n");
           mainMenu();
         } else {
           updateSales(answer.itemId, total);
           updateInventory(answer.itemId, newQuantity, printResults);
         }
 
+        // ? this function prints the order with total on checkout
         function printResults(prod, quan, total) {
           console.log("\n\t\Item:\t\t" + prod + "\n\tQuantity: \t" + quan + "\n\tTotal: \t\t$" +
             total.toFixed(2) + "\n");
         }
 
+        var newQuantity = res[0].stock_quantity - answer.quantity;
+        var total = answer.quantity * res[0].price;
+        var prod = res[0].product_name;
+        var quan = answer.quantity;
+        var sales = parseFloat(res[0].product_sales);
+
+
+        // ? this function updates inventory on checkout
         function updateInventory(id, newQuantity) {
           connection.query(
             "UPDATE products SET ? WHERE ?",
@@ -134,6 +138,7 @@ function purchaseByID(printResults) {
             });
         }
 
+        // ? this function updates the product-sales amount on checkout
         function updateSales(id, total) {
           if (!sales) {
             total = total;
@@ -150,7 +155,6 @@ function purchaseByID(printResults) {
             ],
             function (err, res) {
               if (err) throw err;
-              console.log("\n ====== sales updated ======");
             });
         }
       });

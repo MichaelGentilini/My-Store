@@ -15,7 +15,7 @@ CREATE TABLE products
   (6,2) NULL,
   stock_quantity INT NULL,
    product_sales FLOAT
-  (10,2) NULL,
+  (9,2) NULL,
   PRIMARY KEY
   (item_id)
 );
@@ -34,7 +34,8 @@ CREATE TABLE products
     ("Samsung S10", "smart-phone", 899.99, 20),
     ("Google - Home Mini ", "smart-home", 48.99, 50),
     ("Amazon - Echo Dot", "smart-home", 49.99, 45),
-    ("Ring - Video Doorbell", "smart-home", 199.99, 25)
+    ("Ring - Video Doorbell", "smart-home", 199.99, 25),
+    ("Power Smokeless Indoor Grill", "houseware", 699.99, 20)
   ;
 
   SELECT *
