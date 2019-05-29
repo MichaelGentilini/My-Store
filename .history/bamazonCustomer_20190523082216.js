@@ -44,7 +44,6 @@ function mainMenu() {
         default:
           console.log('That is not an option');
           mainMenu();
-          break;
       }
     });
 }
@@ -56,7 +55,7 @@ function quitProgram() {
 
 function showAll() {
   connection.query("SELECT item_id,product_name,price,department_name FROM products ", function (err, res) {
-    // if (err) throw err;
+    if (err) throw err;
     console.log("\n ======================= Availabe Products ========================\n");
     console.table(res);
     mainMenu();
@@ -89,13 +88,11 @@ function purchaseByID(printResults) {
       }, function (err, res) {
         if (err) throw err;
 
-        if (err) {
-          console.log("Error login: " + err);
-        }
-
         // ? not sure how to stop the program from running if there is no result (no item_id)
         if (res.length < 1) {
+          console.log(res.length < 1);
           console.log('\n 💩 💩 💩\t That item does not exist. Please try your order again! \n');
+          quitProgram();
           mainMenu();
 
         } else if (res[0].stock_quantity < answer.quantity) {
@@ -105,19 +102,19 @@ function purchaseByID(printResults) {
           updateSales(answer.itemId, total);
           updateInventory(answer.itemId, newQuantity, printResults);
         }
-        if (res[0]) {
-          var newQuantity = res[0].stock_quantity - answer.quantity;
-          var total = answer.quantity * res[0].price;
-          var prod = res[0].product_name;
-          var quan = answer.quantity;
-          var sales = parseFloat(res[0].product_sales);
-        }
 
         // ? this function prints the order with total on checkout
         function printResults(prod, quan, total) {
           console.log("\n\t\Item:\t\t" + prod + "\n\tQuantity: \t" + quan + "\n\tTotal: \t\t$" +
             total.toFixed(2) + "\n");
         }
+
+        var newQuantity = res[0].stock_quantity - answer.quantity;
+        var total = answer.quantity * res[0].price;
+        var prod = res[0].product_name;
+        var quan = answer.quantity;
+        var sales = parseFloat(res[0].product_sales);
+
 
         // ? this function updates inventory on checkout
         function updateInventory(id, newQuantity) {

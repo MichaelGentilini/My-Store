@@ -87,7 +87,7 @@ function purchaseByID(printResults) {
       connection.query(query, {
         item_id: answer.itemId
       }, function (err, res) {
-        if (err) throw err;
+        // if (err) throw err;
 
         if (err) {
           console.log("Error login: " + err);
@@ -95,8 +95,16 @@ function purchaseByID(printResults) {
 
         // ? not sure how to stop the program from running if there is no result (no item_id)
         if (res.length < 1) {
+          // console.log(res.length < 1);
           console.log('\n 💩 💩 💩\t That item does not exist. Please try your order again! \n');
-          mainMenu();
+          // mainMenu();
+          res[0].product_name;
+          res[0].stock_quantity;
+          res[0].price;
+          res[0].product_sales;
+
+          quitProgram();
+          connection.end();
 
         } else if (res[0].stock_quantity < answer.quantity) {
           console.log("\nSorry, we don't have enough to fill your order! \n\t Please enter a different amount.\n");

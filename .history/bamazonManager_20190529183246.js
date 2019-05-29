@@ -128,14 +128,13 @@ function addInventory() {
         ],
         function (err, res) {
           if (err) throw err;
-          if (res.affectedRows < 1) {
+          if (res.length < 1) {
             console.log('\n \t\t That item does not exist. Please enter a different ID! \n');
-            managerMenu();
+            mainMenu();
 
-          } else {
-            console.log("\nThe quantity has been updated to " + answer.quantity + " units\n");
-            managerMenu();
           }
+          console.log("\nThe quantity has been updated to " + answer.quantity + " units\n");
+          managerMenu();
         });
     });
 }

@@ -128,6 +128,7 @@ function addInventory() {
         ],
         function (err, res) {
           if (err) throw err;
+          console.log(res);
           if (res.affectedRows < 1) {
             console.log('\n \t\t That item does not exist. Please enter a different ID! \n');
             managerMenu();

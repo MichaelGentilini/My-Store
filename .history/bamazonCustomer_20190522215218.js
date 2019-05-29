@@ -1,6 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-require("console.table");
+var table = require("console.table");
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -36,29 +36,24 @@ function mainMenu() {
           showAll();
           break;
         case 'Purchase an Item by ID':
-          purchaseByID();
+          purchaseByID()
           break;
         case 'Quit':
-          quitProgram();
+          connection.end();
           break;
         default:
           console.log('That is not an option');
           mainMenu();
-          break;
       }
     });
 }
 
-function quitProgram() {
-  console.log("Thank you for your business!");
-  connection.end();
-}
-
 function showAll() {
   connection.query("SELECT item_id,product_name,price,department_name FROM products ", function (err, res) {
-    // if (err) throw err;
+    if (err) throw err;
     console.log("\n ======================= Availabe Products ========================\n");
     console.table(res);
+    // connection.end();
     mainMenu();
   });
 }
@@ -68,58 +63,41 @@ function purchaseByID(printResults) {
     .prompt([{
         name: 'itemId',
         message: 'Enter the ID of the product you wish to purchase:',
-        validate: function checkInput(number) {
-          var reg = /^\d+$/;
-          return reg.test(number) || "please enter a valid ID number"
+        validate: function validateItem(name) {
+          return name !== '';
         }
       },
       {
         name: 'quantity',
         message: 'Enter the quantity of the products to purchase:',
-        validate: function checkInput(number) {
-          var reg = /^\d+$/;
-          return reg.test(number) || "please enter a valid quantity"
+        validate: function validateQuatity(quantity) {
+          return quantity !== '';
         }
       }
     ])
     .then(function (answer) {
-      var query = "SELECT product_name,price,stock_quantity,product_sales FROM products WHERE?";
+      var query = "SELECT product_name,price,stock_quantity FROM products WHERE?";
       connection.query(query, {
         item_id: answer.itemId
       }, function (err, res) {
         if (err) throw err;
+        var newQuantity = res[0].stock_quantity - answer.quantity;
+        var total = answer.quantity * res[0].price;
+        var prod = res[0].product_name;
+        var quan = answer.quantity;
 
-        if (err) {
-          console.log("Error login: " + err);
-        }
-
-        // ? not sure how to stop the program from running if there is no result (no item_id)
-        if (res.length < 1) {
-          console.log('\n 💩 💩 💩\t That item does not exist. Please try your order again! \n');
-          mainMenu();
-
-        } else if (res[0].stock_quantity < answer.quantity) {
-          console.log("\nSorry, we don't have enough to fill your order! \n\t Please enter a different amount.\n");
+        if (res[0].stock_quantity < answer.quantity) {
+          console.log("\nSorry, we don't have enough to fill that order! \n\t Please enter a different amount.");
           mainMenu();
         } else {
-          updateSales(answer.itemId, total);
           updateInventory(answer.itemId, newQuantity, printResults);
         }
-        if (res[0]) {
-          var newQuantity = res[0].stock_quantity - answer.quantity;
-          var total = answer.quantity * res[0].price;
-          var prod = res[0].product_name;
-          var quan = answer.quantity;
-          var sales = parseFloat(res[0].product_sales);
-        }
 
-        // ? this function prints the order with total on checkout
         function printResults(prod, quan, total) {
           console.log("\n\t\Item:\t\t" + prod + "\n\tQuantity: \t" + quan + "\n\tTotal: \t\t$" +
             total.toFixed(2) + "\n");
         }
 
-        // ? this function updates inventory on checkout
         function updateInventory(id, newQuantity) {
           connection.query(
             "UPDATE products SET ? WHERE ?",
@@ -137,26 +115,9 @@ function purchaseByID(printResults) {
               mainMenu();
             });
         }
-
-        // ? this function updates the product-sales amount on checkout
-        function updateSales(id, total) {
-          if (!sales) {
-            total = total;
-          } else {
-            total = sales + total;
-          }
-          connection.query(
-            "UPDATE products SET ? WHERE ?", [{
-                product_sales: total
-              },
-              {
-                item_id: id
-              }
-            ],
-            function (err, res) {
-              if (err) throw err;
-            });
-        }
       });
+
+
     });
+
 }

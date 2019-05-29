@@ -96,6 +96,8 @@ function purchaseByID(printResults) {
         // ? not sure how to stop the program from running if there is no result (no item_id)
         if (res.length < 1) {
           console.log('\n 💩 💩 💩\t That item does not exist. Please try your order again! \n');
+          // quitProgram();
+          // connection.end();
           mainMenu();
 
         } else if (res[0].stock_quantity < answer.quantity) {

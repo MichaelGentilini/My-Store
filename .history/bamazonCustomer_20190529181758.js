@@ -89,14 +89,15 @@ function purchaseByID(printResults) {
       }, function (err, res) {
         if (err) throw err;
 
-        if (err) {
-          console.log("Error login: " + err);
-        }
 
         // ? not sure how to stop the program from running if there is no result (no item_id)
         if (res.length < 1) {
+          // console.log(res.length < 1);
           console.log('\n 💩 💩 💩\t That item does not exist. Please try your order again! \n');
-          mainMenu();
+          // mainMenu();
+
+          quitProgram();
+          connection.end();
 
         } else if (res[0].stock_quantity < answer.quantity) {
           console.log("\nSorry, we don't have enough to fill your order! \n\t Please enter a different amount.\n");
@@ -105,13 +106,13 @@ function purchaseByID(printResults) {
           updateSales(answer.itemId, total);
           updateInventory(answer.itemId, newQuantity, printResults);
         }
-        if (res[0]) {
-          var newQuantity = res[0].stock_quantity - answer.quantity;
-          var total = answer.quantity * res[0].price;
-          var prod = res[0].product_name;
-          var quan = answer.quantity;
-          var sales = parseFloat(res[0].product_sales);
-        }
+
+        var newQuantity = res[0].stock_quantity - answer.quantity;
+        var total = answer.quantity * res[0].price;
+        var prod = res[0].product_name;
+        var quan = answer.quantity;
+        var sales = parseFloat(res[0].product_sales);
+
 
         // ? this function prints the order with total on checkout
         function printResults(prod, quan, total) {
