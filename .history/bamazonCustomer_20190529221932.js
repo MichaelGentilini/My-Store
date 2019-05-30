@@ -156,7 +156,7 @@ function purchaseByID(printResults) {
             ],
             function (err, res) {
               if (err) throw err;
-              // console.log(res);
+              console.log(res);
             });
         }
       });

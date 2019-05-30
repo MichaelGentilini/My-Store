@@ -145,7 +145,7 @@ function purchaseByID(printResults) {
 
         // ? this function updates the product-sales amount on checkout
         function updateSales(id, total) {
-          console.log('sales updated!');
+
           connection.query(
             "UPDATE products SET ? WHERE ?", [{
                 product_sales: total
@@ -156,7 +156,6 @@ function purchaseByID(printResults) {
             ],
             function (err, res) {
               if (err) throw err;
-              // console.log(res);
             });
         }
       });

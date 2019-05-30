@@ -104,7 +104,6 @@ function purchaseByID(printResults) {
         } else {
           updateSales(answer.itemId, total);
           updateInventory(answer.itemId, newQuantity, printResults);
-          mainMenu();
         }
         if (res[0]) {
           var newQuantity = res[0].stock_quantity - answer.quantity;
@@ -113,11 +112,7 @@ function purchaseByID(printResults) {
           var quan = answer.quantity;
           var sales = parseFloat(res[0].product_sales);
         }
-        if (!sales) {
-          total = total;
-        } else {
-          total = sales + total;
-        }
+
         // ? this function prints the order with total on checkout
         function printResults(prod, quan, total) {
           console.log("\n\t\Item:\t\t" + prod + "\n\tQuantity: \t" + quan + "\n\tTotal: \t\t$" +
@@ -145,7 +140,11 @@ function purchaseByID(printResults) {
 
         // ? this function updates the product-sales amount on checkout
         function updateSales(id, total) {
-          console.log('sales updated!');
+          if (!sales) {
+            total = total;
+          } else {
+            total = sales + total;
+          }
           connection.query(
             "UPDATE products SET ? WHERE ?", [{
                 product_sales: total
@@ -156,7 +155,6 @@ function purchaseByID(printResults) {
             ],
             function (err, res) {
               if (err) throw err;
-              // console.log(res);
             });
         }
       });

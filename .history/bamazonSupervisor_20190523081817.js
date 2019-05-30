@@ -48,7 +48,7 @@ function supervisorMenu() {
 }
 
 function viewSales() {
-  connection.query("SELECT departments.department_id, products.department_name, departments.over_head_costs, SUM(product_sales) AS product_sales, departments.over_head_costs-SUM(product_sales) AS total_profit FROM products INNER JOIN departments ON products.department_name=departments.department_name GROUP BY department_id", function (err, res) {
+  connection.query("SELECT departments.department_id, products.department_name, departments.over_head_costs, SUM(product_sales) AS product_sales, departments.over_head_costs-SUM(product_sales) AS total_profit FROM products LEFT JOIN departments ON products.department_name=departments.department_name GROUP BY department_id", function (err, res) {
     if (err) throw err;
 
     for (let j = 0; j < res.length; j++) {
