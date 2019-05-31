@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
   password: "password",
   database: "bamazon"
 });
-connection.connect(function(err, res) {
+connection.connect(function (err, res) {
   if (err) throw err;
   console.log("connected as id " + connection.threadId + "\n");
   mainMenu();
@@ -20,14 +20,12 @@ connection.connect(function(err, res) {
 
 function mainMenu() {
   inquirer
-    .prompt([
-      {
-        name: "menuItem",
-        message: "What would you like to do?: \n\n",
-        type: "list",
-        choices: ["See all items", "Purchase an Item by ID", "Quit"]
-      }
-    ])
+    .prompt([{
+      name: "menuItem",
+      message: "What would you like to do?: \n\n",
+      type: "list",
+      choices: ["See all items", "Purchase an Item by ID", "Quit"]
+    }])
     .then(answer => {
       switch (answer.menuItem) {
         case "See all items":
@@ -55,8 +53,8 @@ function quitProgram() {
 
 function showAll() {
   connection.query(
-    "SELECT item_id,product_name,price,department_name FROM products ",
-    function(err, res) {
+    "SELECT item_id,product_name,price,department_name FROM products WHERE stock_quantity > 0 ",
+    function (err, res) {
       if (err) throw err;
       console.log(
         "\n ======================= Availabe Products ========================\n"
@@ -69,8 +67,7 @@ function showAll() {
 
 function purchaseByID(printResults) {
   inquirer
-    .prompt([
-      {
+    .prompt([{
         name: "itemId",
         message: "Enter the ID of the product you wish to purchase:",
         validate: function checkInput(number) {
@@ -87,15 +84,14 @@ function purchaseByID(printResults) {
         }
       }
     ])
-    .then(function(answer) {
+    .then(function (answer) {
       var query =
         "SELECT product_name,price,stock_quantity,product_sales FROM products WHERE?";
       connection.query(
-        query,
-        {
+        query, {
           item_id: answer.itemId
         },
-        function(err, res) {
+        function (err, res) {
           if (err) throw err;
 
           if (res[0]) {
@@ -127,12 +123,12 @@ function purchaseByID(printResults) {
           function printResults(prod, quan, total) {
             console.log(
               "\n\tItem:\t\t" +
-                prod +
-                "\n\tQuantity: \t" +
-                quan +
-                "\n\tTotal: \t\t$" +
-                total.toFixed(2) +
-                "\n"
+              prod +
+              "\n\tQuantity: \t" +
+              quan +
+              "\n\tTotal: \t\t$" +
+              total.toFixed(2) +
+              "\n"
             );
           }
 
@@ -140,15 +136,14 @@ function purchaseByID(printResults) {
           function updateInventory(id, newQuantity) {
             connection.query(
               "UPDATE products SET ? WHERE ?",
-              [
-                {
+              [{
                   stock_quantity: newQuantity
                 },
                 {
                   item_id: id
                 }
               ],
-              function(err, res) {
+              function (err, res) {
                 if (err) throw err;
                 console.log("\n ====== Inventory Has Been Updated ======");
                 printResults(prod, quan, total);
@@ -167,15 +162,14 @@ function purchaseByID(printResults) {
             console.log("sales updated!");
             connection.query(
               "UPDATE products SET ? WHERE ?",
-              [
-                {
+              [{
                   product_sales: total
                 },
                 {
                   item_id: id
                 }
               ],
-              function(err, res) {
+              function (err, res) {
                 if (err) throw err;
               }
             );

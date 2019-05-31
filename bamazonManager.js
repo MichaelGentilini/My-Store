@@ -56,8 +56,9 @@ function managerMenu() {
 }
 
 // ? This function displays all available inventory
+
 function showAll() {
-  connection.query("SELECT item_id,product_name,price,department_name,stock_quantity FROM products ", function (err, res) {
+  connection.query("SELECT item_id,product_name,price,department_name,stock_quantity FROM products", function (err, res) {
     if (err) throw err;
     for (let k = 0; k < res.length; k++) {
       if (res[k].stock_quantity === null) {
@@ -69,7 +70,6 @@ function showAll() {
     managerMenu();
   });
 }
-
 
 // ? This function displays if any inventory is less than 5.
 function lowInventory() {
