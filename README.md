@@ -16,10 +16,6 @@ npm install
 
 3. Create bamazon database using contents of schemal.sql
 
-```sh
-npm install
-```
-
 4. Run the program
 
 ```sh
