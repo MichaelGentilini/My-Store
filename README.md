@@ -1,18 +1,40 @@
-# My-Store
+# My-Store - an Amazon-like storefront using Node.js and MySQL
 
-###Bamazon is an Amazon-like storefront using Node.js and MySQL
+## Getting Started
 
-## [Video](https://drive.google.com/file/d/1m3Z4QNdZxOSmnrUOFUGyiaZxDG1wvpNy/view?usp=sharing "video") ##
+1. Clone the repo
 
-##node bamazonCustomer.js
+```sh
+git clone https://github.com/MichaelGentilini/My-Store.git
+```
+
+2. Install dependencies
+
+```sh
+npm install
+```
+
+3. Create bamazon database using contents of schemal.sql
+
+```sh
+npm install
+```
+
+4. Run the program
+
+```sh
+node bamazonCustomer.js
+```
 
 Allows the user to:
 
 - View products available
 - Purchase a product by the item_id
 
+```sh
+node bamazonManager.js
+```
 
-## node bamazonManager.js
 Allows the manager to:
 
 - View Products for Sale
@@ -20,15 +42,23 @@ Allows the manager to:
 - Add to Inventory
 - Add New Product
 
+```sh
+node bamazonSupervisor.js
+```
 
-## node bamazonSupervisor.js
 Allows the supervisor to:
 
 - View Product Sales by Department
 - Create New Department
 
+<hr>
+
+<p align="center">
+  <img src="bamazon.gif" width="50%">
+</p>
 
 ## Things used
+
 [REGEX](https://regex101.com/) for validation
 
 [inquirer](https://www.npmjs.com/package/inquirer) for the CLI
@@ -37,4 +67,8 @@ Allows the supervisor to:
 
 [console.table](https://www.npmjs.com/package/console.table) for formatting
 
-## Find it on my [GitHub](https://github.com/dallasappraiser/My-Store) ##
+<hr>
+
+### Find it on [GitHub](https://github.com/michaelgentilini/My-Store)
+
+### Watch the [Video](https://drive.google.com/file/d/1m3Z4QNdZxOSmnrUOFUGyiaZxDG1wvpNy/view?usp=sharing)
